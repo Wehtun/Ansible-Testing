@@ -1,0 +1,21 @@
+- name: Configure SSH-ACL
+   ios_config:
+    lines:
+      - 10 permit ip host 1.1.1.1 any log
+      - 11 remark LOCATION
+      - 20 permit ip host 2.2.2.2 any log
+      - 21 remark LOCATION
+      - 30 deny ip any any log
+    parents: ip access-list extended SSH-ACL
+    match: exact
+
+- name: Apply SSH-ACL to VTY lines
+  ios_config:
+    lines:
+      - ip access-class SSH-ACL in
+    parents: line vty 0 15
+    match: exact
+
+- name: Save running Config
+   ios_config:
+    save
